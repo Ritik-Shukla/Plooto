@@ -21,6 +21,9 @@ module.exports.signIn = function(req,res){
 // creating sign up
 module.exports.create =  async function(req,res){
 try{
+    if (req.body.password != req.body.confirm_password) {
+        return res.redirect("back");
+      }
 let user = await User.findOne({email:req.body.email});
 if(!user){
         const newUser = await User.create(req.body);
