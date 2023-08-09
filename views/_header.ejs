@@ -1,4 +1,25 @@
 <!-- This is partial  -->
 <header>
     This is header part
+    <ul>
+        <% if(locals.user){%>
+<li>
+    <a href="/users/profile">
+        <%= user.name %>
+    </a>
+</li>
+<li>
+    <a href="/users/sign-out">Sign out</a>
+</li>
+            <%}else{%>
+
+<li>
+    <a href="users/sign-in">Sign in</a>
+</li>
+
+<li>
+    <a href="users/sign-up">Sign up</a>
+</li>
+                <%}%>
+            </ul>
 </header>
