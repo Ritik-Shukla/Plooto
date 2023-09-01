@@ -13,17 +13,17 @@ const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy')
 const MongoStore = require('connect-mongo')(session);
 
-const sassMiddleware = require('node-sass-middleware');
+// const sassMiddleware = require('node-sass-middleware');
 
-app.use(sassMiddleware({
-  /* Options */
-  src: './assets/scss'
-, dest: './assets/css'
-,debug: true
-, outputStyle: 'extended',
-prefix:'/css'
-}));
-app.use(express.urlencoded());
+// app.use(sassMiddleware({
+//   /* Options */
+//   src: './assets/scss',
+//  dest: './assets/css',
+//  debug: true,
+//  outputStyle: 'extended',
+// prefix:'/css'
+// }));
+app.use(express.urlencoded({extended:true}));
 
 app.use(cookieParser());
 

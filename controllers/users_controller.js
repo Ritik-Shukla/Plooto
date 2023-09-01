@@ -18,7 +18,7 @@ if(req.isAuthenticated()){
 }
 
 module.exports.signIn = function(req,res){
-
+console.log(" signin");
     if(req.isAuthenticated()){
        return res.redirect('/users/profile');
     }
