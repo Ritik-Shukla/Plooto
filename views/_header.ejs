@@ -1,25 +1,37 @@
 <!-- This is partial  -->
-<header>
-    This is header part
-    <ul>
-        <% if(locals.user){%>
-<li>
-    <a href="/users/profile">
-        <%= user.name %>
-    </a>
-</li>
-<li>
-    <a href="/users/sign-out">Sign out</a>
-</li>
-            <%}else{%>
+<header id="layout-header">
+    <!-- This is header part -->
+    <nav>
+        <div class="mini-logo">
+            <p>
+                <a href='/'>
+                    Plooto
+                </a>
+            </p>
+        </div>
 
-<li>
-    <a href="users/sign-in">Sign in</a>
-</li>
+        <div class="auth-links">
+            <ul>
+                <% if(locals.user){%>
+                    <li>
+                        <a href="/users/profile">
+                            <%= user.name %>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/users/sign-out">Sign out</a>
+                    </li>
+                    <%}else{%>
 
-<li>
-    <a href="users/sign-up">Sign up</a>
-</li>
-                <%}%>
+                        <li>
+                            <a href="users/sign-in">Sign in</a>
+                        </li>
+
+                        <li>
+                            <a href="users/sign-up">Sign up</a>
+                        </li>
+                        <%}%>
             </ul>
+        </div>
+    </nav>
 </header>
