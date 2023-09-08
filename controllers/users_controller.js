@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const fs = require('fs');
+const path = require('path'); 
 
 module.exports.profile = async  function(req, res){
     const user = await User.findById(req.params.id);
@@ -7,35 +9,51 @@ module.exports.profile = async  function(req, res){
         profile_user:user
     })
 }
-module.exports.update = async  function(req,res){
-//     if(req.user.id == req.params.id){
-//     User.findByIdAndUpdate(req.params.id,req.body,function(err,user){
-// return res.redirect('back');
-//     })
-//     }else{
-//         return res.status(401).send('Unauthorized');
-//     }
-try {
-    // Check if the user is authorized
-    if (req.user.id === req.params.id) {
-      // Use async/await to update the user information
-      const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body);
-      // Check if the user was found and updated
-      if (!updatedUser) {
-        return res.status(404).send('User not found');
-      }
-      // Redirect back to the previous page
-      return res.redirect('back');
-    } else {
-      // Unauthorized
-      return res.status(401).send('Unauthorized');
-    }
-  } catch (err) {
-    // Handle any errors that may occur during the update process
-    console.error(err);
-    return res.status(500).send('Internal Server Error');
-  }
+
+module.exports.update = async function (req, res) {
+  if (req.user.id == req.params.id) {
+    try {
+      const user = await User.findById(req.params.id);
+
+      // Assuming 'uploadedAvatar' is a middleware or function for handling avatar uploads using Multer.
+      User.uploadedAvatar(req, res, async function (err) {
+        if (err) {
+          console.log('*****Multer Error: ', err);
+          req.flash('error', 'Avatar upload error'); // Flash an error message if avatar upload fails.
+        }
+
+        // Update user data
+        user.name = req.body.name;
+        user.email = req.body.email;
+
+        if (req.file) {
+
+if(user.avatar){
+  fs.unlinkSync(path.join(__dirname,'..',user.avatar));
 }
+
+
+
+          user.avatar = User.avatarPath + '/' + req.file.filename;
+        }
+
+        // Save the updated user data
+        await user.save();
+
+        return res.redirect('back');
+      });
+    } catch (err) {
+      console.error(err);
+      req.flash('error', 'Internal Server Error');
+      return res.status(500).send('Internal Server Error');
+    }
+  } else {
+    req.flash('error', 'Unauthorized');
+    return res.status(401).send('Unauthorized');
+  }
+};
+
+
 
 module.exports.signUp = function(req,res){
 
@@ -83,11 +101,13 @@ if(!user){
 
 module.exports.createSession = function(req,res){
     // todo later
+    req.flash('success','Logged in successfully');
     return res.redirect('/');
 }
 
 module.exports.destroySession = function(req,res){
     // req.logout();
+    req.flash('success','You have logged out!');
     req.logout(function(err) {
         if (err) { return next(err); }
         res.redirect('/');
